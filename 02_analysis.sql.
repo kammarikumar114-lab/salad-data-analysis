@@ -1,0 +1,18 @@
+-- Goal: Find the most protein-dense recipes (Protein per 100 calories)
+WITH NutritiousRecipes AS (
+    SELECT 
+        recipe_name,
+        category,
+        (protein_grams * 100.0 / NULLIF(calories, 0)) as protein_density
+    FROM recipes
+)
+SELECT * FROM NutritiousRecipes 
+ORDER BY protein_density DESC;
+
+-- Goal: Rank salads within their categories by protein content
+SELECT 
+    recipe_name, 
+    category, 
+    protein_grams,
+    RANK() OVER (PARTITION BY category ORDER BY protein_grams DESC) as rank_in_category
+FROM recipes;
